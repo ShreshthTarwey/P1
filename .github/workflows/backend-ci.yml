@@ -1,32 +1,18 @@
-name: Production Pipeline
+name: Live Runner Validation Test
 
 on:
-  push:
-    paths:
-      - 'automated-parent/docker-demo/src/**'
-    branches: ["main"]
-  workflow_dispatch:
-  
+  workflow_dispatch: # Allows us to trigger it manually via the button
+
 jobs:
-  code-pushing:
-    runs-on: ubuntu-latest
-
+  local-execution-job:
+    runs-on: self-hosted # 💡 CRITICAL: This routes the job straight to your laptop!
+    
     steps:
-      - name: checkout code
-        uses: actions/checkout@v4
+      - name: Validate Connection
+        run: echo "Automation script is running locally on Shreshth's Laptop!"
 
-      - name: build docker image
-        run: |
-          cd automated-parent
-          docker build -t ghcr.io/shreshthtarwey/lpu-war2-image:1.0 -f docker-demo/Dockerfile .
-      
-      - name: Login to GHCR
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{github.actor}}
-          password: ${{secrets.LOGIN_TOKEN}}
-      
-      - name: Push To GHCR
-        run: |
-          docker push ghcr.io/shreshthtarwey/lpu-war2-image:1.0
+      - name: Display Host Machine Name
+        run: hostname
+
+      - name: Show Current Active System User
+        run: whoami
