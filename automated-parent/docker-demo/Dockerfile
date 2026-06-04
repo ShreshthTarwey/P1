@@ -1,7 +1,6 @@
 FROM maven:3.9.1-eclipse-temurin-17 AS builder
 WORKDIR /build
 COPY pom.xml .
-COPY src ./src
 COPY mvnw .
 COPY .mvn ./.mvn
 COPY docker-demo ./docker-demo
