@@ -3,7 +3,7 @@ name: Production Pipeline
 on:
   push:
     paths:
-      - 'docker-demo/src/**'
+      - 'automated-parent/docker-demo/src/**'
     branches: ["main"]
   workflow_dispatch:
   
@@ -17,17 +17,17 @@ jobs:
 
       - name: build docker image
         run: |
-          cd docker-demo
+          cd automated-parent/docker-demo
+          chmod +x mvnw
           ./mvnw clean package
           docker build -t ghcr.io/shreshthtarwey/lpu-war2-image:1.0 .
       
       - name: Login to GHCR
-        uses: Docker/login-action@v3
+        uses: docker/login-action@v3
         with:
           username: ${{github.actor}}
-          password: ${{secrets.GITHUB_TOKEN}}
+          password: ${{secrets.LOGIN_TOKEN}}
       
       - name: Push To GHCR
         run: |
-          cd docker-demo
           docker push ghcr.io/shreshthtarwey/lpu-war2-image:1.0
